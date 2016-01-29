@@ -28,7 +28,7 @@ public class EasyMove : MonoBehaviour
 
 		if (Input.GetKey (getKeyCode(dir.LEFT)))
 			movex = -1;
-		else if (Input.GetKey (getKeyCode(dir.LEFT)))
+		else if (Input.GetKey (getKeyCode(dir.RIGHT)))
 			movex = 1;
 		else
 			movex = 0;
