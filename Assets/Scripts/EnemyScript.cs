@@ -5,7 +5,11 @@ using System.Collections.Generic;
 public class EnemyScript : MonoBehaviour {
 
 	public GameObject target;
-	public float speed = 2;
+
+	public float health = 5;
+	public float attack = 2;
+	public float moveSpeed = 2;
+
 	public float interval = 3; // Attack interval
 	private bool attackBool = false;
 
@@ -19,6 +23,7 @@ public class EnemyScript : MonoBehaviour {
 	void Start () {
 		colliders = GetComponents<BoxCollider2D> ();
 
+		// Find the right collider from the enemy
 		foreach (BoxCollider2D col in colliders) 
 		{
 			if (col.isTrigger) {
@@ -32,11 +37,12 @@ public class EnemyScript : MonoBehaviour {
 	void Update () {
 
 		if (!colliding)
-			transform.position = Vector2.MoveTowards (new Vector2 (transform.position.x, transform.position.y), target.transform.position, speed * Time.deltaTime);
+			transform.position = Vector2.MoveTowards (new Vector2 (transform.position.x, transform.position.y), target.transform.position, moveSpeed * Time.deltaTime);
 		if (attackBool && colliding) {
-			if (target.GetComponent<PlayerScript> ()) {
-				Debug.Log ("Test");
-				target.GetComponent<PlayerScript> ().health -= 1;
+			if (target != null && target.GetComponent<PlayerScript> ()) {
+
+				// Reduce HP from the target
+				target.GetComponent<PlayerScript> ().health -= attack;
 				attackBool = false;
 			}
 		}
@@ -46,6 +52,7 @@ public class EnemyScript : MonoBehaviour {
 	{
 		while (true) 
 		{
+			// Wait for X seconds for a new attack
 			yield return new WaitForSeconds (interval);
 			attackBool = true;
 		}
