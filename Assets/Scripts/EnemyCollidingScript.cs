@@ -15,10 +15,15 @@ public class EnemyCollidingScript : MonoBehaviour {
 	
 	}
 
-	void OnTriggerEnter2D(Collider2D col)
+	void OnTriggerStay2D(Collider2D col)
 	{
+		
 		if(col.tag == "Player")
 			enemyScript.colliding = true;
+
+		// If colliding gameobject is not the target. Change the enemys target to that collider.
+		if (col.gameObject != enemyScript.target && col.tag == "Player")
+			enemyScript.target = col.gameObject;
 	}
 
 	void OnTriggerExit2D(Collider2D col)
