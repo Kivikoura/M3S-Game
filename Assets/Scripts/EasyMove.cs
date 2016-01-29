@@ -9,6 +9,8 @@ public class EasyMove : MonoBehaviour
 	private float movex = 0f;
 	private float movey = 0f;
 
+    private float minLimit, maxLimit;
+
     private enum dir
     {
         UP,
@@ -20,21 +22,22 @@ public class EasyMove : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-
+	    minLimit = 0.2f;
+	    maxLimit = 0.8f;
 	}
 
 	// Update is called once per frame
-	void Update () {
-
-		if (Input.GetKey (getKeyCode(dir.LEFT)))
+	void Update ()
+    {
+		if (Input.GetKey (getKeyCode(dir.LEFT)) && CheckBorders(Vector3.left))
 			movex = -1;
-		else if (Input.GetKey (getKeyCode(dir.RIGHT)))
+		else if (Input.GetKey (getKeyCode(dir.RIGHT)) && CheckBorders(Vector3.right))
 			movex = 1;
 		else
 			movex = 0;
-		if (Input.GetKey (getKeyCode(dir.UP)))
+		if (Input.GetKey (getKeyCode(dir.UP)) && CheckBorders(Vector3.up))
 			movey = 1;
-		else if (Input.GetKey (getKeyCode(dir.DOWN)))
+		else if (Input.GetKey (getKeyCode(dir.DOWN)) && CheckBorders(Vector3.down))
 			movey = -1;
 		else
 			movey = 0;
@@ -64,6 +67,15 @@ public class EasyMove : MonoBehaviour
                 break;
         }
         return KeyCode.None;
+    }
+
+    bool CheckBorders(Vector3 moveTo)
+    {
+        bool isInside = true;
+        Vector3 viewPos = Camera.main.WorldToViewportPoint(transform.position + moveTo);
+        if (viewPos.x < minLimit || viewPos.x > maxLimit) isInside = false;
+        if (viewPos.y < minLimit || viewPos.y > maxLimit) isInside = false;
+        return isInside;
     }
 
 	void FixedUpdate ()
