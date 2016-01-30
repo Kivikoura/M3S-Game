@@ -11,7 +11,7 @@ public class EasyMove : MonoBehaviour
 	private float movex = 0f;
 	private float movey = 0f;
     public float SpellX, SpellY;
-    public Quaternion quat;
+    public float rot;
 
     private float minLimit, maxLimit;
 
@@ -77,10 +77,16 @@ public class EasyMove : MonoBehaviour
 	{
 	    //Vector3 lookDir = new Vector3(Input.GetAxis("Horizontal_SpellDir"), Input.GetAxis("Vertical_SpellDir"));
 
-	    SpellX = Input.GetAxis("Horizontal_SpellDir");
-	    SpellY = Input.GetAxis("Vertical_SpellDir");
+        if (Input.GetAxis("Horizontal_SpellDir") != 0.0f && Input.GetAxis("Vertical_SpellDir") != 0.0f)
+        {
+            SpellX = Input.GetAxis("Horizontal_SpellDir");
+            SpellY = Input.GetAxis("Vertical_SpellDir");
 
-        quat = new Quaternion(SpellX, SpellY, 0, 0);
+            rot = Vector2.Angle(new Vector2(SpellX, SpellY), Vector2.up);
+            Vector3 cross = Vector3.Cross(new Vector2(SpellX, SpellY), Vector2.up);
+
+            if (cross.z > 0) rot = 360 - rot;
+        }
 
         MoveX(0);
         MoveY(0);
@@ -102,8 +108,7 @@ public class EasyMove : MonoBehaviour
              case ControlModes.XB360_1:
                 MoveX(Input.GetAxis("Horizontal"));
                 MoveY(Input.GetAxis("Vertical"));
-	            SpellDirectionIndicator.localRotation = quat;
-                SpellDirectionIndicator.eulerAngles.Set(0,0,SpellDirectionIndicator.eulerAngles.z/2);
+                SpellDirectionIndicator.localRotation = Quaternion.Euler(0,0,rot);
                 break;
             default:
                 break;
