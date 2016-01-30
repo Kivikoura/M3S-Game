@@ -10,33 +10,26 @@ public class EnemyScript : MonoBehaviour {
 	public float attack = 2;
 	public float moveSpeed = 2;
 
+	public float agroRange;
+
 	public float interval = 3; // Attack interval
 	private bool attackBool = false;
 
-	private BoxCollider2D[] colliders;
-
-	private BoxCollider2D colTrigger;
+	private BoxCollider2D colliders;
 
 	public bool colliding = false;
 
 	// Use this for initialization
 	void Start () {
-		colliders = GetComponents<BoxCollider2D> ();
+		colliders = GetComponent<BoxCollider2D> ();
 
-		// Find the right collider from the enemy
-		foreach (BoxCollider2D col in colliders) 
-		{
-			if (col.isTrigger) {
-				colTrigger = col;
-			}
-		}
 		StartCoroutine (attackWait());
 	}
 
 	// Update is called once per frame
 	void Update () {
 
-		if (!colliding)
+		if (!colliding && target != null)
 			transform.position = Vector2.MoveTowards (new Vector2 (transform.position.x, transform.position.y), target.transform.position, moveSpeed * Time.deltaTime);
 		if (attackBool && colliding) {
 			if (target != null && target.GetComponent<PlayerScript> ()) {
@@ -46,6 +39,20 @@ public class EnemyScript : MonoBehaviour {
 				attackBool = false;
 			}
 		}
+			
+	}
+
+	public void receiveDamage(float amount)
+	{
+		health -= amount;
+		if (health <= 0)
+			deathSequence ();
+			
+	}
+
+	void deathSequence()
+	{
+		Destroy (gameObject);
 	}
 
 	IEnumerator attackWait()
@@ -53,7 +60,7 @@ public class EnemyScript : MonoBehaviour {
 		while (true) 
 		{
 			// Wait for X seconds for a new attack
-			yield return new WaitForSeconds (interval);
+			yield return new WaitForSeconds (Random.Range(interval - 1, interval + 1));
 			attackBool = true;
 		}
 	}

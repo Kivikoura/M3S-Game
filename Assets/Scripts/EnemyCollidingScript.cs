@@ -3,11 +3,10 @@ using System.Collections;
 
 public class EnemyCollidingScript : MonoBehaviour {
 
-	private EnemyScript enemyScript;
+	public EnemyScript enemyScript;
 
 	// Use this for initialization
 	void Start () {
-		enemyScript = GetComponent<EnemyScript> ();
 	}
 	
 	// Update is called once per frame

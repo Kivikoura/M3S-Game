@@ -22,7 +22,7 @@ public class SkillsScript : MonoBehaviour {
 		}
 
 	}
-
+		
 
 	public List<Skill> skills = new List<Skill>();
 
