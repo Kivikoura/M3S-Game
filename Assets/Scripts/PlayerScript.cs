@@ -13,16 +13,26 @@ public class PlayerScript : MonoBehaviour {
 
 	public SkillsScript skillScript;
 	public GameObject facing;
+	private Animator animator;
+	private AnimationState state;
+	private AnimatorStateInfo state1;
 
 
 	// Use this for initialization
 	void Start () {
 		skillSlot1 = skillScript.skills [0]; // Testi vain
 		skillSlot2 = skillScript.skills [1]; // Testi vain
-	}
+		animator = GetComponent<Animator>();
 	
+	}
+
 	// Update is called once per frame
 	void Update () {
+
+		if (GetComponent<Rigidbody2D> ().velocity.x > 0.1f)
+			GetComponent<SpriteRenderer> ().flipX = false;
+		if(GetComponent<Rigidbody2D> ().velocity.x < -0.1f)
+			GetComponent<SpriteRenderer> ().flipX = true;
 		
 		if (Input.GetKey (KeyCode.Z))
 		{
@@ -39,14 +49,14 @@ public class PlayerScript : MonoBehaviour {
 		{
 			if (skillSlot1.name != "" && attackBool) {
 				
-				skillSlot1.useSkill (facing);
+				skillSlot1.useSkill (facing,  this.gameObject.name);
 				StartCoroutine (attackInterval(skillSlot1.interval));
 			}
 		}
 		if (Input.GetKey (KeyCode.V)) 
 		{
 			if (skillSlot2.name != "" && attackBool) {
-				skillSlot2.useSkill (facing);
+				skillSlot2.useSkill (facing,  this.gameObject.name);
 				StartCoroutine (attackInterval (skillSlot2.interval));
 			}
 		}

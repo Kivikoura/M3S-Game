@@ -21,9 +21,13 @@ public class FireBall : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (col.tag == "Enemy")
+		if (col.tag == "Player" && col.name != this.tag)
 		{
-			col.GetComponent<EnemyScript> ().receiveDamage(damage);
+			if(col.GetComponent<EnemyScript>())
+				col.GetComponent<EnemyScript> ().receiveDamage(damage);
+			if(col.GetComponent<PlayerScript>())
+				col.GetComponent<PlayerScript> ().receiveDamage(damage);
+			
 			particle = Instantiate(particlePrefab, col.transform.position, Quaternion.identity) as ParticleSystem;
 			particle.transform.SetParent(transform.parent);
 			Destroy(particle.gameObject, particle.startLifetime);
