@@ -10,6 +10,7 @@ public class PlayerScript : MonoBehaviour {
 
 	public SkillsScript.Skill skillSlot1;
 	public SkillsScript.Skill skillSlot2;
+	public SkillsScript.Skill skillSlot3;
 
 	public SkillsScript skillScript;
 	public GameObject facing;
@@ -22,7 +23,7 @@ public class PlayerScript : MonoBehaviour {
 	void Start () {
 		skillSlot1 = skillScript.skills [0]; // Testi vain
 		skillSlot2 = skillScript.skills [1]; // Testi vain
-		animator = GetComponent<Animator>();
+		skillSlot3 = skillScript.skills [2]; // VIELKI TESTI
 	
 	}
 
@@ -45,7 +46,7 @@ public class PlayerScript : MonoBehaviour {
 			if(facing != null)
 				facing.transform.Rotate (Vector3.forward * facingRotateSpeed);
 		}
-		if (Input.GetKey (KeyCode.C))
+		/*if (Input.GetKey (KeyCode.C))
 		{
 			if (skillSlot1.name != "" && attackBool) {
 				
@@ -59,7 +60,7 @@ public class PlayerScript : MonoBehaviour {
 				skillSlot2.useSkill (facing,  this.gameObject.name);
 				StartCoroutine (attackInterval (skillSlot2.interval));
 			}
-		}
+		}*/
 
 		if (health <= 0)
 			Destroy (gameObject);
