@@ -1,23 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
+using JetBrains.Annotations;
 
 public class EasyMove : MonoBehaviour
 {
 
-    public int ControlMode = 0;
+    public ControlModes ControlMode;
 	public float Speed = 0f;
+    public Transform SpellDirectionIndicator;
 	private float movex = 0f;
 	private float movey = 0f;
+    public float SpellX, SpellY;
+    public Quaternion quat;
 
     private float minLimit, maxLimit;
 
-    private enum dir
+    public enum ControlModes
     {
-        UP,
-        RIGHT,
-        DOWN,
-        LEFT
-    }
+        WASD,
+        ARROWS,
+        XB360_1,
+        XB360_2
+    };
 
 	// Use this for initialization
 	void Start ()
@@ -29,45 +33,8 @@ public class EasyMove : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		if (Input.GetKey (getKeyCode(dir.LEFT)) && CheckBorders(Vector3.left))
-			movex = -1;
-		else if (Input.GetKey (getKeyCode(dir.RIGHT)) && CheckBorders(Vector3.right))
-			movex = 1;
-		else
-			movex = 0;
-		if (Input.GetKey (getKeyCode(dir.UP)) && CheckBorders(Vector3.up))
-			movey = 1;
-		else if (Input.GetKey (getKeyCode(dir.DOWN)) && CheckBorders(Vector3.down))
-			movey = -1;
-		else
-			movey = 0;
-	}
 
-    KeyCode getKeyCode(dir direction)
-    {
-        switch (ControlMode)
-        {
-            case 0:
-                if (direction == dir.UP) return KeyCode.W;
-                if (direction == dir.RIGHT) return KeyCode.D;
-                if (direction == dir.DOWN) return KeyCode.S;
-                if (direction == dir.LEFT) return KeyCode.A;
-                break;
-            case 1:
-                if (direction == dir.UP) return KeyCode.UpArrow;
-                if (direction == dir.RIGHT) return KeyCode.RightArrow;
-                if (direction == dir.DOWN) return KeyCode.DownArrow;
-                if (direction == dir.LEFT) return KeyCode.LeftArrow;
-                break;
-            default:
-                if (direction == dir.UP) return KeyCode.W;
-                if (direction == dir.RIGHT) return KeyCode.D;
-                if (direction == dir.DOWN) return KeyCode.S;
-                if (direction == dir.LEFT) return KeyCode.A;
-                break;
-        }
-        return KeyCode.None;
-    }
+	}
 
     bool CheckBorders(Vector3 moveTo)
     {
@@ -78,8 +45,70 @@ public class EasyMove : MonoBehaviour
         return isInside;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="dir">1 moves to right, -1 moves to left</param>
+    void MoveX(float dir)
+    {
+        movex = dir;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="dir">1 moves to up, -1 moves to down</param>
+    void MoveY(float dir)
+    {
+        movey = dir;
+    }
+
+    void SetTargetDirection(Vector3 dir)
+    {
+        SpellDirectionIndicator.localRotation = Quaternion.Euler(dir);
+    }
+
+    void UseSkill(int skillSlot)
+    {
+        
+    }
+
 	void FixedUpdate ()
 	{
+	    //Vector3 lookDir = new Vector3(Input.GetAxis("Horizontal_SpellDir"), Input.GetAxis("Vertical_SpellDir"));
+
+	    SpellX = Input.GetAxis("Horizontal_SpellDir");
+	    SpellY = Input.GetAxis("Vertical_SpellDir");
+
+        quat = new Quaternion(SpellX, SpellY, 0, 0);
+
+        MoveX(0);
+        MoveY(0);
+
+        switch (ControlMode)
+	    {
+	         case ControlModes.ARROWS:
+                if (Input.GetKey(KeyCode.UpArrow)) MoveY(1);
+                if (Input.GetKey(KeyCode.DownArrow)) MoveY(-1);
+                if (Input.GetKey(KeyCode.RightArrow)) MoveX(1);
+                if (Input.GetKey(KeyCode.LeftArrow)) MoveX(-1);
+                break;
+             case ControlModes.WASD:
+                if (Input.GetKey(KeyCode.W)) MoveY(1);
+                if (Input.GetKey(KeyCode.S)) MoveY(-1);
+                if (Input.GetKey(KeyCode.D)) MoveX(1);
+                if (Input.GetKey(KeyCode.A)) MoveX(-1);
+                break;
+             case ControlModes.XB360_1:
+                MoveX(Input.GetAxis("Horizontal"));
+                MoveY(Input.GetAxis("Vertical"));
+	            SpellDirectionIndicator.localRotation = quat;
+                SpellDirectionIndicator.eulerAngles.Set(0,0,SpellDirectionIndicator.eulerAngles.z/2);
+                break;
+            default:
+                break;
+	    }
+
 
 		GetComponent<Rigidbody2D>().velocity = new Vector2 (movex * Speed, movey * Speed);
 	}
