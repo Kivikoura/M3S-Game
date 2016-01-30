@@ -13,6 +13,8 @@ public class SkillsScript : MonoBehaviour {
 		public string type;
 		public Sprite icon;
 		public GameObject prefab;
+		public float interval;
+
 
 		public void useSkill(GameObject caster)
 		{

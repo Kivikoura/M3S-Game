@@ -9,6 +9,7 @@ public class PlayerScript : MonoBehaviour {
 	public bool attackBool = true; // Check if we can attack
 
 	public SkillsScript.Skill skillSlot1;
+	public SkillsScript.Skill skillSlot2;
 
 	public SkillsScript skillScript;
 	public GameObject facing;
@@ -17,6 +18,7 @@ public class PlayerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		skillSlot1 = skillScript.skills [0]; // Testi vain
+		skillSlot2 = skillScript.skills [1]; // Testi vain
 	}
 	
 	// Update is called once per frame
@@ -38,18 +40,30 @@ public class PlayerScript : MonoBehaviour {
 			if (skillSlot1.name != "" && attackBool) {
 				
 				skillSlot1.useSkill (facing);
-				StartCoroutine (attackInterval());
+				StartCoroutine (attackInterval(skillSlot1.interval));
 			}
-		}	
+		}
+		if (Input.GetKey (KeyCode.V)) 
+		{
+			if (skillSlot2.name != "" && attackBool) {
+				skillSlot2.useSkill (facing);
+				StartCoroutine (attackInterval (skillSlot2.interval));
+			}
+		}
 
 		if (health <= 0)
 			Destroy (gameObject);
+
+		if (attackBool == false)
+		{
+			// Don't allow the player to move.
+		}
 	}
 
-	IEnumerator attackInterval()
+	IEnumerator attackInterval(float interval)
 	{
 		attackBool = false;
-		yield return new WaitForSeconds (0.5f);
+		yield return new WaitForSeconds (interval);
 		attackBool = true;
 	}
 
