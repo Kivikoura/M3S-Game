@@ -127,6 +127,8 @@ public class EasyMove : MonoBehaviour
                 MoveX(Input.GetAxis("Horizontal_2"));
                 MoveY(Input.GetAxis("Vertical_2"));
                 SpellDirectionIndicator.localRotation = Quaternion.Euler(0, 0, rot_2);
+                if (Input.GetAxis("RT_2") > 0.5f) gameObject.GetComponent<PlayerScript>().skillSlot1.useSkill(SpellDirectionIndicator.gameObject);
+                if (Input.GetAxis("LT_2") > 0.5f) gameObject.GetComponent<PlayerScript>().skillSlot2.useSkill(SpellDirectionIndicator.gameObject);
                 break;
             default:
                 break;
