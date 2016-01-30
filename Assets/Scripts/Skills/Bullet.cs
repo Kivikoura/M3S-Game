@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D col)
 	{
-		if (col.tag == "Player" && col.name != this.tag || col.name == "Zombie" && col.tag != this.tag)
+		if (col.tag == "Player" && col.name != this.tag || col.name == "Zombie(Clone)" && col.tag != this.tag)
 		{
 			
 
