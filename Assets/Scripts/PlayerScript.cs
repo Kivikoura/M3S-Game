@@ -59,6 +59,20 @@ public class PlayerScript : MonoBehaviour {
 			// Don't allow the player to move.
 		}
 	}
+	// Possibly where the math happens.
+	public void receiveDamage(float amount)
+	{
+		health -= amount;
+		if (health <= 0)
+			deathSequence ();
+
+	}
+
+	// Death animation needed.
+	void deathSequence()
+	{
+		Destroy (gameObject);
+	}
 
 	IEnumerator attackInterval(float interval)
 	{

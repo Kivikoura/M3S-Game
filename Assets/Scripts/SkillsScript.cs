@@ -9,7 +9,6 @@ public class SkillsScript : MonoBehaviour {
 	{
 		public string name;
 		public string description;
-		public float damage;
 		public string type;
 		public Sprite icon;
 		public GameObject prefab;
