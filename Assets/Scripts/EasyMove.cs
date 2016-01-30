@@ -137,7 +137,11 @@ public class EasyMove : MonoBehaviour
 				if (Input.GetAxis ("LT_1") > 0.5f && attackBool) {
 					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot2);
 				}
-				break;
+                if (Input.GetButton("RB_1") && attackBool)
+                {
+                    useSkill(gameObject.GetComponent<PlayerScript>().skillSlot3);
+                }
+                break;
             case ControlModes.XB360_2:
                 MoveX(Input.GetAxis("Horizontal_2"));
                 MoveY(Input.GetAxis("Vertical_2"));
@@ -148,6 +152,10 @@ public class EasyMove : MonoBehaviour
 				if (Input.GetAxis ("LT_2") > 0.5f && attackBool) {
 					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot2);
 				}
+                if (Input.GetButton("RB_2") && attackBool)
+                {
+                    useSkill(gameObject.GetComponent<PlayerScript>().skillSlot3);
+                }
                 break;
             default:
                 break;
