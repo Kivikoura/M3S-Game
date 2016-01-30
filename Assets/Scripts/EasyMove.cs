@@ -120,6 +120,11 @@ public class EasyMove : MonoBehaviour
 					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot1);
 				}
 			}
+			if (Input.GetKey (KeyCode.B)) {
+				if (attackBool) {
+					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot2);
+				}
+			}
                 break;
             case ControlModes.WASD:
                 if (Input.GetKey(KeyCode.W)) MoveY(1);
@@ -168,6 +173,11 @@ public class EasyMove : MonoBehaviour
 	public void useSkill(SkillsScript.Skill skill)
 	{
 		skill.useSkill (SpellDirectionIndicator.gameObject, this.gameObject.name);
+		if(skill.castable){
+		if (skill.cooldown != 0) 
+				StartCoroutine (attackCooldown (skill));
+		}
+		
 		StartCoroutine (attackInterval (skill.interval));
 	}
 
@@ -177,6 +187,14 @@ public class EasyMove : MonoBehaviour
 		attackBool = false;
 		yield return new WaitForSeconds (interval);
 		attackBool = true;
+	}
+
+	IEnumerator attackCooldown(SkillsScript.Skill skill)
+	{
+		skill.castable = false;
+		yield return new WaitForSeconds (skill.cooldown);
+		skill.castable = true;
+			
 	}
 
 }
