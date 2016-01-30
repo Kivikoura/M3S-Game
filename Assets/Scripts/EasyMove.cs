@@ -122,6 +122,8 @@ public class EasyMove : MonoBehaviour
                 SpellDirectionIndicator.localRotation = Quaternion.Euler(0,0,rot_1);
 	            if (Input.GetAxis("RT_1") > 0.5f) gameObject.GetComponent<PlayerScript>().skillSlot1.useSkill(SpellDirectionIndicator.gameObject);
                 if (Input.GetAxis("LT_1") > 0.5f) gameObject.GetComponent<PlayerScript>().skillSlot2.useSkill(SpellDirectionIndicator.gameObject);
+                //if (Input.GetButton("joystick 1 button 4")) gameObject.GetComponent<PlayerScript>().skillSlot3.useSkill(SpellDirectionIndicator.gameObject);
+                //if (Input.GetButton("joystick 1 button 5")) gameObject.GetComponent<PlayerScript>().skillSlot4.useSkill(SpellDirectionIndicator.gameObject);
                 break;
             case ControlModes.XB360_2:
                 MoveX(Input.GetAxis("Horizontal_2"));
@@ -129,6 +131,8 @@ public class EasyMove : MonoBehaviour
                 SpellDirectionIndicator.localRotation = Quaternion.Euler(0, 0, rot_2);
                 if (Input.GetAxis("RT_2") > 0.5f) gameObject.GetComponent<PlayerScript>().skillSlot1.useSkill(SpellDirectionIndicator.gameObject);
                 if (Input.GetAxis("LT_2") > 0.5f) gameObject.GetComponent<PlayerScript>().skillSlot2.useSkill(SpellDirectionIndicator.gameObject);
+                //if (Input.GetButton("joystick 2 button 4")) gameObject.GetComponent<PlayerScript>().skillSlot3.useSkill(SpellDirectionIndicator.gameObject);
+                //if (Input.GetButton("joystick 2 button 5")) gameObject.GetComponent<PlayerScript>().skillSlot4.useSkill(SpellDirectionIndicator.gameObject);
                 break;
             default:
                 break;
