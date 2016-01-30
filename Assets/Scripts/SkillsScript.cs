@@ -13,15 +13,8 @@ public class SkillsScript : MonoBehaviour {
 		public string type;
 		public Sprite icon;
 		public GameObject prefab;
-		public float interval;
 
-		public void useSkill(GameObject caster)
-		{
-			GameObject go;
-			go = Instantiate (prefab, caster.transform.position, Quaternion.identity) as GameObject;
-			go.transform.localEulerAngles = caster.transform.eulerAngles;
-		}
-			
+
 	}
 
 
