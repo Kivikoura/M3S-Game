@@ -124,7 +124,7 @@ public class EasyMove : MonoBehaviour
             case ControlModes.XB360_2:
                 MoveX(Input.GetAxis("Horizontal_2"));
                 MoveY(Input.GetAxis("Vertical_2"));
-                //SpellDirectionIndicator.localRotation = Quaternion.Euler(0, 0, rot_2);
+                SpellDirectionIndicator.localRotation = Quaternion.Euler(0, 0, rot_2);
                 break;
             default:
                 break;
