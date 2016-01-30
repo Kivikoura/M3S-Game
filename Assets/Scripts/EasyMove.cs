@@ -10,8 +10,8 @@ public class EasyMove : MonoBehaviour
     public Transform SpellDirectionIndicator;
 	private float movex = 0f;
 	private float movey = 0f;
-    public float SpellX, SpellY;
-    public float rot;
+    public float SpellX_1, SpellY_1, SpellX_2, SpellY_2;
+    public float rot_1, rot_2;
 
     private float minLimit, maxLimit;
 
@@ -77,15 +77,26 @@ public class EasyMove : MonoBehaviour
 	{
 	    //Vector3 lookDir = new Vector3(Input.GetAxis("Horizontal_SpellDir"), Input.GetAxis("Vertical_SpellDir"));
 
-        if (Input.GetAxis("Horizontal_SpellDir") != 0.0f && Input.GetAxis("Vertical_SpellDir") != 0.0f)
+        if (Input.GetAxis("Horizontal_SpellDir_1") != 0.0f && Input.GetAxis("Vertical_SpellDir_1") != 0.0f)
         {
-            SpellX = Input.GetAxis("Horizontal_SpellDir");
-            SpellY = Input.GetAxis("Vertical_SpellDir");
+            SpellX_1 = Input.GetAxis("Horizontal_SpellDir_1");
+            SpellY_1 = Input.GetAxis("Vertical_SpellDir_1");
 
-            rot = Vector2.Angle(new Vector2(SpellX, SpellY), Vector2.up);
-            Vector3 cross = Vector3.Cross(new Vector2(SpellX, SpellY), Vector2.up);
+            rot_1 = Vector2.Angle(new Vector2(SpellX_1, SpellY_1), Vector2.up);
+            Vector3 cross = Vector3.Cross(new Vector2(SpellX_1, SpellY_1), Vector2.up);
 
-            if (cross.z > 0) rot = 360 - rot;
+            if (cross.z > 0) rot_1 = 360 - rot_1;
+        }
+
+        if (Input.GetAxis("Horizontal_SpellDir_2") != 0.0f && Input.GetAxis("Vertical_SpellDir_2") != 0.0f)
+        {
+            SpellX_2 = Input.GetAxis("Horizontal_SpellDir_2");
+            SpellY_2 = Input.GetAxis("Vertical_SpellDir_2");
+
+            rot_2 = Vector2.Angle(new Vector2(SpellX_2, SpellY_2), Vector2.up);
+            Vector3 cross = Vector3.Cross(new Vector2(SpellX_2, SpellY_2), Vector2.up);
+
+            if (cross.z > 0) rot_2 = 360 - rot_2;
         }
 
         MoveX(0);
@@ -106,9 +117,14 @@ public class EasyMove : MonoBehaviour
                 if (Input.GetKey(KeyCode.A)) MoveX(-1);
                 break;
              case ControlModes.XB360_1:
-                MoveX(Input.GetAxis("Horizontal"));
-                MoveY(Input.GetAxis("Vertical"));
-                SpellDirectionIndicator.localRotation = Quaternion.Euler(0,0,rot);
+                MoveX(Input.GetAxis("Horizontal_1"));
+                MoveY(Input.GetAxis("Vertical_1"));
+                SpellDirectionIndicator.localRotation = Quaternion.Euler(0,0,rot_1);
+                break;
+            case ControlModes.XB360_2:
+                MoveX(Input.GetAxis("Horizontal_2"));
+                MoveY(Input.GetAxis("Vertical_2"));
+                //SpellDirectionIndicator.localRotation = Quaternion.Euler(0, 0, rot_2);
                 break;
             default:
                 break;
