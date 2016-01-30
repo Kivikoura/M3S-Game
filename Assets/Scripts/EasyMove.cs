@@ -10,8 +10,8 @@ public class EasyMove : MonoBehaviour
     public Transform SpellDirectionIndicator;
 	private float movex = 0f;
 	private float movey = 0f;
-    public float SpellX_1, SpellY_1, SpellX_2, SpellY_2;
-    public float rot_1, rot_2;
+    private float SpellX_1, SpellY_1, SpellX_2, SpellY_2;
+    private float rot_1, rot_2;
 
     private float minLimit, maxLimit;
 
