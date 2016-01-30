@@ -14,13 +14,17 @@ public class SkillsScript : MonoBehaviour {
 		public Sprite icon;
 		public GameObject prefab;
 		public float interval;
+		public float cooldown;
+		[HideInInspector] public bool castable = true; 
 
 		public void useSkill(GameObject rotateObject, string caster)
 		{
-			GameObject go;
-			go = Instantiate (prefab, rotateObject.transform.position, Quaternion.identity) as GameObject;
-			go.transform.localEulerAngles = rotateObject.transform.eulerAngles;
-			go.tag = caster;
+			if (castable) {
+				GameObject go;
+				go = Instantiate (prefab, rotateObject.transform.position, Quaternion.identity) as GameObject;
+				go.transform.localEulerAngles = rotateObject.transform.eulerAngles;
+				go.tag = caster;
+			}
 		}
 
 	}
