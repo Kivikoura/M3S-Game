@@ -4,16 +4,17 @@ using System.Collections.Generic;
 
 public class EnemyScript : MonoBehaviour {
 
+	public enum enemyCategory{Monster, Boss}
+
+	public enemyCategory enemyCate;
 	public GameObject target;
 
 	public float health = 5;
 	public float attack = 2;
 	public float moveSpeed = 2;
 
-	public float agroRange;
-
 	public float interval = 3; // Attack interval
-	private bool attackBool = false;
+	private bool attackBool = true;
 
 	private BoxCollider2D colliders;
 
@@ -22,26 +23,38 @@ public class EnemyScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		colliders = GetComponent<BoxCollider2D> ();
-
-		StartCoroutine (attackWait());
+		//StartCoroutine (moveRandomly());
+		if (this.tag == "Player2")
+			target = GameObject.Find ("Player1");
+		if (this.tag == "Player1")
+			target = GameObject.Find ("Player2");
 	}
 
 	// Update is called once per frame
 	void Update () {
 
+		// IF the enemy is not colliding with anything and has a target, move towards the target.
 		if (!colliding && target != null)
 			transform.position = Vector2.MoveTowards (new Vector2 (transform.position.x, transform.position.y), target.transform.position, moveSpeed * Time.deltaTime);
+			
+		// If the enemy is colliding with something and is ready to attack.
 		if (attackBool && colliding) {
-			if (target != null && target.GetComponent<PlayerScript> ()) {
+			// if the enemy has a target and the target has playerscript, deal damage
+			if (target != null && target.GetComponent<PlayerScript> ()) 
+			{
 
 				// Reduce HP from the target
-				target.GetComponent<PlayerScript> ().health -= attack;
-				attackBool = false;
+				target.GetComponent<PlayerScript> ().receiveDamage(attack);
+				StartCoroutine (attackInterval(interval));
 			}
 		}
+
+
+
 			
 	}
 
+	// Possibly where the math happens.
 	public void receiveDamage(float amount)
 	{
 		health -= amount;
@@ -50,18 +63,18 @@ public class EnemyScript : MonoBehaviour {
 			
 	}
 
+	// Death animation needed.
 	void deathSequence()
 	{
 		Destroy (gameObject);
 	}
 
-	IEnumerator attackWait()
+	// The wait time between attacks.
+	IEnumerator attackInterval(float interval)
 	{
-		while (true) 
-		{
-			// Wait for X seconds for a new attack
-			yield return new WaitForSeconds (Random.Range(interval - 1, interval + 1));
-			attackBool = true;
-		}
+		attackBool = false;
+		yield return new WaitForSeconds (Random.Range(interval - 1, interval + 1));
+		attackBool = true;
 	}
+
 }

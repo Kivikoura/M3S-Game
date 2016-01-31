@@ -15,6 +15,8 @@ public class EasyMove : MonoBehaviour
 
     private float minLimit, maxLimit;
 
+	public bool attackBool = true;
+
     public enum ControlModes
     {
         WASD,
@@ -104,27 +106,61 @@ public class EasyMove : MonoBehaviour
 
         switch (ControlMode)
 	    {
-	         case ControlModes.ARROWS:
-                if (Input.GetKey(KeyCode.UpArrow)) MoveY(1);
-                if (Input.GetKey(KeyCode.DownArrow)) MoveY(-1);
-                if (Input.GetKey(KeyCode.RightArrow)) MoveX(1);
-                if (Input.GetKey(KeyCode.LeftArrow)) MoveX(-1);
+		case ControlModes.ARROWS:
+			if (Input.GetKey (KeyCode.UpArrow))
+				MoveY (1);
+			if (Input.GetKey (KeyCode.DownArrow))
+				MoveY (-1);
+			if (Input.GetKey (KeyCode.RightArrow))
+				MoveX (1);
+			if (Input.GetKey (KeyCode.LeftArrow))
+				MoveX (-1);
+			if (Input.GetKey (KeyCode.V)) {
+				if (attackBool) {
+					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot1);
+				}
+			}
+			if (Input.GetKey (KeyCode.B)) {
+				if (attackBool) {
+					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot2);
+				}
+			}
                 break;
-             case ControlModes.WASD:
+            case ControlModes.WASD:
                 if (Input.GetKey(KeyCode.W)) MoveY(1);
                 if (Input.GetKey(KeyCode.S)) MoveY(-1);
                 if (Input.GetKey(KeyCode.D)) MoveX(1);
                 if (Input.GetKey(KeyCode.A)) MoveX(-1);
                 break;
-             case ControlModes.XB360_1:
-                MoveX(Input.GetAxis("Horizontal_1"));
-                MoveY(Input.GetAxis("Vertical_1"));
-                SpellDirectionIndicator.localRotation = Quaternion.Euler(0,0,rot_1);
+			case ControlModes.XB360_1:
+				MoveX (Input.GetAxis ("Horizontal_1"));
+				MoveY (Input.GetAxis ("Vertical_1"));
+				SpellDirectionIndicator.localRotation = Quaternion.Euler (0, 0, rot_1);
+				if (Input.GetAxis ("RT_1") > 0.5f && attackBool) {
+					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot1);
+				}
+				if (Input.GetAxis ("LT_1") > 0.5f && attackBool) {
+					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot2);
+				}
+                if (Input.GetButton("RB_1") && attackBool)
+                {
+                    useSkill(gameObject.GetComponent<PlayerScript>().skillSlot3);
+                }
                 break;
             case ControlModes.XB360_2:
                 MoveX(Input.GetAxis("Horizontal_2"));
                 MoveY(Input.GetAxis("Vertical_2"));
                 SpellDirectionIndicator.localRotation = Quaternion.Euler(0, 0, rot_2);
+				if (Input.GetAxis ("RT_2") > 0.5f && attackBool) {
+					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot1);
+				}
+				if (Input.GetAxis ("LT_2") > 0.5f && attackBool) {
+					useSkill (gameObject.GetComponent<PlayerScript> ().skillSlot2);
+				}
+                if (Input.GetButton("RB_2") && attackBool)
+                {
+                    useSkill(gameObject.GetComponent<PlayerScript>().skillSlot3);
+                }
                 break;
             default:
                 break;
@@ -134,6 +170,31 @@ public class EasyMove : MonoBehaviour
 		GetComponent<Rigidbody2D>().velocity = new Vector2 (movex * Speed, movey * Speed);
 	}
 
+	public void useSkill(SkillsScript.Skill skill)
+	{
+		skill.useSkill (SpellDirectionIndicator.gameObject, this.gameObject.name);
+		if(skill.castable){
+		if (skill.cooldown != 0) 
+				StartCoroutine (attackCooldown (skill));
+		}
+		
+		StartCoroutine (attackInterval (skill.interval));
+	}
 
+	// The wait time between attacks.
+	IEnumerator attackInterval(float interval)
+	{
+		attackBool = false;
+		yield return new WaitForSeconds (interval);
+		attackBool = true;
+	}
+
+	IEnumerator attackCooldown(SkillsScript.Skill skill)
+	{
+		skill.castable = false;
+		yield return new WaitForSeconds (skill.cooldown);
+		skill.castable = true;
+			
+	}
 
 }
