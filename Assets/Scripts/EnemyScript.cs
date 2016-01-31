@@ -17,6 +17,7 @@ public class EnemyScript : MonoBehaviour {
 	private bool attackBool = true;
 
 	private BoxCollider2D colliders;
+	private Rigidbody2D rigidbody;
 
 	public bool colliding = false;
 
@@ -28,10 +29,17 @@ public class EnemyScript : MonoBehaviour {
 			target = GameObject.Find ("Player1");
 		if (this.tag == "Player1")
 			target = GameObject.Find ("Player2");
+
+		rigidbody = GetComponent<Rigidbody2D> ();
 	}
 
 	// Update is called once per frame
 	void Update () {
+
+		if (target.transform.position.x > transform.position.x)
+			GetComponent<SpriteRenderer> ().flipX = true;
+		else
+			GetComponent<SpriteRenderer> ().flipX = false;
 
 		// IF the enemy is not colliding with anything and has a target, move towards the target.
 		if (!colliding && target != null)

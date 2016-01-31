@@ -14,8 +14,13 @@ public class EasyMove : MonoBehaviour
     public float rot_1, rot_2;
 
     private float minLimit, maxLimit;
+	private Animator animator;
+
+	public AudioSource clip;
 
 	public bool attackBool = true;
+
+	private PlayerScript playerScript;
 
     public enum ControlModes
     {
@@ -30,6 +35,10 @@ public class EasyMove : MonoBehaviour
 	{
 	    minLimit = 0.2f;
 	    maxLimit = 0.8f;
+
+		playerScript = GetComponent<PlayerScript> ();
+		animator = GetComponent<Animator> ();
+		clip = GetComponent<AudioSource> ();
 	}
 
 	// Update is called once per frame
@@ -168,25 +177,42 @@ public class EasyMove : MonoBehaviour
 
 
 		GetComponent<Rigidbody2D>().velocity = new Vector2 (movex * Speed, movey * Speed);
+	
+
+	
 	}
 
 	public void useSkill(SkillsScript.Skill skill)
 	{
 		skill.useSkill (SpellDirectionIndicator.gameObject, this.gameObject.name);
-		if(skill.castable){
-		if (skill.cooldown != 0) 
+		if(skill.cooldown != 0){
+			if (skill.castable) {
 				StartCoroutine (attackCooldown (skill));
+				if (SpellDirectionIndicator.localEulerAngles.z > 180)
+					GetComponent<SpriteRenderer> ().flipX = true;
+				else {
+					GetComponent<SpriteRenderer> ().flipX = false;
+				}
+				//playerScript.voiceList [0].Play ();'
+				clip.clip = playerScript.voiceList[0];
+				clip.Play ();
+				animator.SetBool ("isCasting", true);
+			}
+			
 		}
-		
-		StartCoroutine (attackInterval (skill.interval));
+		if(attackBool){
+			StartCoroutine (attackInterval (skill.interval));
+			if(skill.castable) animator.SetBool ("isCasting", true);
+		}
 	}
 
 	// The wait time between attacks.
 	IEnumerator attackInterval(float interval)
-	{
+	{	
 		attackBool = false;
 		yield return new WaitForSeconds (interval);
 		attackBool = true;
+		animator.SetBool ("isCasting", false);
 	}
 
 	IEnumerator attackCooldown(SkillsScript.Skill skill)
@@ -194,6 +220,7 @@ public class EasyMove : MonoBehaviour
 		skill.castable = false;
 		yield return new WaitForSeconds (skill.cooldown);
 		skill.castable = true;
+		animator.SetBool ("isCasting", false);
 			
 	}
 

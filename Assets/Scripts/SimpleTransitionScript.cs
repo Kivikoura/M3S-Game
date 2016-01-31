@@ -5,7 +5,7 @@ public class SimpleTransitionScript : MonoBehaviour {
 
 
 
-	public void MoveToScene()
+	public void MoveToDuel()
 	{
 		Application.LoadLevel ("DUEL");
 	}

@@ -22,7 +22,8 @@ public class SkillsScript : MonoBehaviour {
 			if (castable) {
 				GameObject go;
 				go = Instantiate (prefab, rotateObject.transform.position, Quaternion.identity) as GameObject;
-				go.transform.localEulerAngles = rotateObject.transform.eulerAngles;
+				if(name != "Zombie")
+					go.transform.localEulerAngles = rotateObject.transform.eulerAngles;
 				go.tag = caster;
 			}
 		}

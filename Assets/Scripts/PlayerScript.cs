@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerScript : MonoBehaviour {
 
@@ -18,22 +19,39 @@ public class PlayerScript : MonoBehaviour {
 	private AnimationState state;
 	private AnimatorStateInfo state1;
 
+	public GameScript gameScript;
+
+	public List<AudioClip> voiceList = new List<AudioClip> ();
+	private AudioSource aSource;
+
+	private Rigidbody2D rigidbody;
+
 
 	// Use this for initialization
 	void Start () {
 		skillSlot1 = skillScript.skills [0]; // Testi vain
 		skillSlot2 = skillScript.skills [1]; // Testi vain
 		skillSlot3 = skillScript.skills [2]; // VIELKI TESTI
-	
+
+		rigidbody = GetComponent<Rigidbody2D> ();
+		animator = GetComponent<Animator> ();
+		aSource = GetComponent<AudioSource> ();
 	}
 
 	// Update is called once per frame
 	void Update () {
 
-		if (GetComponent<Rigidbody2D> ().velocity.x > 0.1f)
-			GetComponent<SpriteRenderer> ().flipX = false;
-		if(GetComponent<Rigidbody2D> ().velocity.x < -0.1f)
+		if (rigidbody.velocity.x > 0.1f)
 			GetComponent<SpriteRenderer> ().flipX = true;
+		if (rigidbody.velocity.x < -0.1f)
+			GetComponent<SpriteRenderer> ().flipX = false;
+	
+		if (rigidbody.velocity.x > 0.1f || rigidbody.velocity.x < -0.1f)
+			animator.SetFloat ("isWalking", 1);
+		else if (rigidbody.velocity.y > 0.1 || rigidbody.velocity.y < 0)
+			animator.SetFloat ("isWalking", 1);
+		else
+			animator.SetFloat ("isWalking", 0);
 		
 		if (Input.GetKey (KeyCode.Z))
 		{
@@ -74,6 +92,8 @@ public class PlayerScript : MonoBehaviour {
 	public void receiveDamage(float amount)
 	{
 		health -= amount;
+		aSource.clip = voiceList [1];
+		aSource.Play ();
 		if (health <= 0)
 			deathSequence ();
 
@@ -82,6 +102,10 @@ public class PlayerScript : MonoBehaviour {
 	// Death animation needed.
 	void deathSequence()
 	{
+		if(this.name == "Player1")
+			gameScript.showWinner ("Player 2");
+		if(this.name == "Player2")
+			gameScript.showWinner ("Player 1");
 		Destroy (gameObject);
 	}
 
